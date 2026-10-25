@@ -1,0 +1,33 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import PostCard from '../../../components/PostCard.astro';
+import Pagination from '../../../components/Pagination.astro';
+import PageBanner from '../../../components/PageBanner.astro';
+
+export async function getStaticPaths({ paginate }) {
+  const posts = (await getCollection('blog', ({ data }) => !data.draft && data.kind === 'tech')).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+  return paginate(posts, { pageSize: 6 });
+}
+
+const { page } = Astro.props as { page: import('astro').Page<CollectionEntry<'blog'>> };
+---
+
+<Base title="文章" description="Rei-soul 的技术文章：计算机系统、深度学习、C++ 与项目复盘。">
+  <PageBanner
+    wallpaper="/wallpapers/blog.svg"
+    title="文章"
+    command="ls ~/posts --category=tech"
+    subtitle={`第 ${page.currentPage} / ${page.lastPage} 页`}
+  />
+  <div class="glass-rise mx-auto max-w-5xl px-4 pb-8 pt-10 md:pt-12">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {page.data.map((post, i) => <PostCard post={post} index={i} />)}
+    </div>
+
+    <Pagination page={page} />
+  </div>
+</Base>

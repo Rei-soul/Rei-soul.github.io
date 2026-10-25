@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import { FRIENDS } from '../data/friends';
+import PageBanner from '../components/PageBanner.astro';
+---
+
+<Base title="友链" description="朋友们与值得尊敬的站点。欢迎交换友链。">
+  <PageBanner
+    wallpaper="/wallpapers/links.svg"
+    title="友链"
+    command="ssh friends@internet"
+    subtitle="互联网上的邻居们。交换友链请在任意文章下留言或提 Issue。"
+  />
+  <div class="glass-rise mx-auto max-w-3xl px-4 pb-8 pt-10 md:pt-12">
+    <div class="grid gap-5 sm:grid-cols-2">
+      {
+        FRIENDS.map((f, i) => (
+          <a href={f.url} target="_blank" rel="noopener" class="post-card rounded-xl p-5" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+            <p class="font-kai font-semibold text-lg">{f.name} <span class="text-fg-mute text-sm">↗</span></p>
+            <p class="text-sm text-fg-mute mt-2 leading-relaxed">{f.desc}</p>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="soft-card rounded-xl p-6 mt-10 font-mono text-xs text-fg-mute leading-7" data-reveal>
+      <p class="text-fg mb-2"># 交换友链</p>
+      <p>name: Rei-soul</p>
+      <p>url: https://rei-soul.github.io</p>
+      <p>desc: 在 0 与 1 之间，留一点墨迹。</p>
+    </div>
+  </div>
+</Base>

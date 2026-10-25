@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404" description="页面不存在。">
+  <div class="mx-auto max-w-2xl px-4 py-24 md:py-32">
+    <div class="term-window rounded-xl overflow-hidden" data-reveal>
+      <div class="flex items-center gap-2 px-4 py-3 border-b border-line">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="ml-2 font-mono text-xs text-fg-mute select-none">panic</span>
+      </div>
+      <div class="term-body px-5 py-5">
+        <p><span class="text-accent">rei@soul:~$</span> curl -I <span id="req-path" class="text-fg-mute">…</span></p>
+        <p class="text-warm">HTTP/1.1 404 Not Found</p>
+        <p class="text-fg-mute mt-3">thread 'main' panicked at 'page not found':</p>
+        <p class="text-fg-mute">note: 你要找的页面可能被移动、删除，或者从未存在过。</p>
+        <p class="text-warm mt-3">segmentation fault (core dumped)</p>
+        <p><span class="text-accent">rei@soul:~$</span> <span class="term-cursor"></span></p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mt-8 justify-center" data-reveal style="--reveal-delay:120ms">
+      <a href="/" class="btn btn-primary">回到首页</a>
+      <a href="/blog/" class="btn btn-ghost">看看文章</a>
+      <a href="/archive/" class="btn btn-ghost">翻翻归档</a>
+    </div>
+  </div>
+</Base>
+
+<script is:inline>
+  // 展示实际请求的路径（构建期无法预知，运行时回填）
+  (function () {
+    var el = document.getElementById('req-path');
+    if (el) el.textContent = location.pathname;
+  })();
+</script>

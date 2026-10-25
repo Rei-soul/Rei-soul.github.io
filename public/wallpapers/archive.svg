@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#090c1d"/>
+      <stop offset="0.55" stop-color="#101632"/>
+      <stop offset="1" stop-color="#161f42"/>
+    </linearGradient>
+    <radialGradient id="pole" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#b9c8ff" stop-opacity="0.9"/>
+      <stop offset="0.3" stop-color="#8fa3ff" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#8fa3ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#night)"/>
+
+  <g fill="#c9d6ff">
+    <circle cx="260" cy="160" r="1.3" opacity="0.6"/><circle cx="420" cy="90" r="1.7" opacity="0.75"/>
+    <circle cx="610" cy="200" r="1" opacity="0.4"/><circle cx="840" cy="110" r="1.4" opacity="0.6"/>
+    <circle cx="1480" cy="150" r="1.6" opacity="0.7"/><circle cx="1360" cy="90" r="1" opacity="0.4"/>
+  </g>
+
+  <circle cx="1240" cy="990" r="420" fill="url(#pole)" opacity="0.55"/>
+
+  <g fill="none" stroke-linecap="round">
+    <path d="M1240 990 m -330 0 a 330 330 0 0 1 233 -233" stroke="#8fa3ff" stroke-width="1.4" opacity="0.3"/>
+    <path d="M1240 990 m -400 0 a 400 400 0 0 1 283 -283" stroke="#8fa3ff" stroke-width="1.2" opacity="0.22"/>
+    <path d="M1240 990 m -470 0 a 470 470 0 0 1 332 -332" stroke="#8fa3ff" stroke-width="1" opacity="0.16"/>
+    <path d="M1240 990 m -540 0 a 540 540 0 0 1 382 -382" stroke="#8fa3ff" stroke-width="1" opacity="0.11"/>
+    <path d="M1240 990 m -610 0 a 610 610 0 0 1 431 -431" stroke="#8fa3ff" stroke-width="1" opacity="0.08"/>
+    <path d="M1240 990 m -300 0 a 300 300 0 0 1 212 -212" stroke="#38d9f0" stroke-width="2.2" opacity="0.65"/>
+    <path d="M1240 990 m -260 0 a 260 260 0 0 1 184 -184" stroke="#38d9f0" stroke-width="1.4" opacity="0.35"/>
+  </g>
+
+  <g stroke="#9fb4ff" stroke-width="1.6" opacity="0.8">
+    <path d="M1240 990 l 0 -624 m 0 624"/>
+    <path d="M940 990 l -6 -16 M1240 390 l -6 16 M1030 500 l -12 -12"/>
+  </g>
+
+  <g fill="#38d9f0">
+    <circle cx="940" cy="990" r="3" opacity="0.9"/>
+    <circle cx="1240" cy="690" r="2.4" opacity="0.7"/>
+    <circle cx="1028" cy="778" r="2.2" opacity="0.6"/>
+    <circle cx="1105" cy="700" r="2" opacity="0.5"/>
+  </g>
+  <circle cx="958" cy="806" r="4" fill="#f0a84c" opacity="0.85"/>
+  <circle cx="958" cy="806" r="10" fill="none" stroke="#f0a84c" stroke-width="1" opacity="0.45"/>
+
+  <path d="M0 830 C300 780 560 840 860 800 C1120 766 1360 820 1600 790 L1600 900 L0 900 Z" fill="#0a0d22"/>
+</svg>

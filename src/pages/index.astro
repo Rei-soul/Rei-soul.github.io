@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import PostCard from '../components/PostCard.astro';
+import Terminal from '../components/Terminal.astro';
+import Starfield from '../components/Starfield.astro';
+import PageBanner from '../components/PageBanner.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const terminalLines = [
+  { t: 'cmd', s: 'whoami' },
+  { t: 'accent', s: 'Rei-soul · CS 本科生 @ NWPU' },
+  { t: 'cmd', s: 'cat interests.txt' },
+  { t: 'out', s: 'C++ · Python · PyTorch · 系统编程 · Web' },
+  { t: 'cmd', s: 'cat motto.txt' },
+  { t: 'warm', s: '在 0 与 1 之间，留一点墨迹。' },
+  { t: 'cmd', s: './build_site --with=astro' },
+  { t: 'out', s: '[OK] 0 errors, ∞ possibilities' },
+];
+---
+
+<Base>
+  <!-- Hero：100vh 壁纸（视差 0.4）+ 星空层（视差 0.15）+ 大毛玻璃卡 -->
+  <PageBanner wallpaper="/wallpapers/home.svg" size="full">
+    <div class="absolute inset-x-0" style="top:-20%;bottom:-20%" data-parallax data-speed="0.15" aria-hidden="true">
+      <Starfield />
+    </div>
+    <div class="glass-card hero-in p-7 md:p-10 mt-10 w-full" style="--reveal-delay:280ms">
+      <div class="grid gap-10 md:grid-cols-[1.05fr_1fr] items-center">
+        <div>
+          <p class="font-mono text-sm text-accent">~/home $ echo "welcome"</p>
+          <h1 class="font-kai text-4xl md:text-5xl font-semibold leading-[1.15] mt-4">
+            欢迎来到<span class="text-accent">我的网站</span>
+          </h1>
+          <p class="mt-5 text-fg-mute leading-loose">
+            很高兴你来到这里。<br />
+            愿你在此的几分钟，有所收获，也有所放松。
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="/blog/" class="btn btn-primary">
+              浏览文章
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </a>
+            <a href="/about/" class="btn btn-ghost">关于我</a>
+          </div>
+        </div>
+
+        <div class="hero-in" style="--reveal-delay:420ms">
+          <Terminal lines={terminalLines} />
+        </div>
+      </div>
+    </div>
+
+    <a href="#latest" class="scroll-hint absolute left-1/2 -translate-x-1/2 bottom-5 text-[#cfe3f5]/80" aria-label="向下滚动查看最新文章">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-6-6 6 6 6-6"/></svg>
+    </a>
+  </PageBanner>
+
+  <!-- 最新文章（卡片上浮压住壁纸底缘，顶部毛玻璃渐隐） -->
+  <div class="glass-rise mx-auto max-w-5xl px-4 pb-4 pt-10 md:pt-14">
+    <section id="latest">
+      <div class="flex items-end justify-between mb-9" data-reveal>
+        <div>
+          <p class="font-mono text-xs text-accent">$ ls -lt ~/posts | head -3</p>
+          <h2 class="font-kai text-2xl font-semibold mt-2">最新文章</h2>
+        </div>
+        <a href="/blog/" class="text-sm text-fg-mute hover:text-accent transition-colors font-mono">all -&gt;</a>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        {posts.map((post, i) => <PostCard post={post} index={i} />)}
+      </div>
+    </section>
+
+    <!-- 一句话介绍这个站的气质 -->
+    <section class="mt-16">
+      <div class="soft-card rounded-2xl px-8 py-10 md:px-14 text-center" data-reveal>
+        <p class="font-kai text-lg md:text-xl leading-loose text-fg-mute">
+          这里一半是<span class="text-accent">代码、公式和汇编</span>，<br class="hidden md:block" />
+          另一半是<span class="text-warm">墨水、晚风和一些没用的浪漫</span>。
+        </p>
+        <p class="font-mono text-xs text-fg-mute mt-5 opacity-70">— 简约，但有科技；理工，但有人文关怀</p>
+      </div>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Toc from '../../components/Toc.astro';
+import Comments from '../../components/Comments.astro';
+import PageBanner from '../../components/PageBanner.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+// 阅读时长与字数（按中文约 400 字/分钟估算）
+const plain = (post.body ?? '').replace(/\s/g, '');
+const readMinutes = Math.max(1, Math.ceil(plain.length / 400));
+
+// 上一篇 / 下一篇（时间倒序相邻）
+const sorted = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const idx = sorted.findIndex((p) => p.id === post.id);
+const newer = idx > 0 ? sorted[idx - 1] : undefined;
+const older = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : undefined;
+
+const isEssay = post.data.kind === 'essay';
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <div id="reading-progress" aria-hidden="true"></div>
+
+  <PageBanner
+    wallpaper={isEssay ? '/wallpapers/essays.svg' : '/wallpapers/blog.svg'}
+    title={post.data.title}
+    command={`cat ~/posts/${post.id}.md`}
+    tone={isEssay ? 'warm' : 'cyan'}
+  />
+
+  <article class="glass-rise mx-auto max-w-5xl px-4 pb-8 pt-10 md:pt-12">
+    <!-- 文章头部：meta 与题记（大标题已在壁纸横幅上） -->
+    <header class="max-w-3xl" data-reveal>
+      <div class="flex flex-wrap items-center gap-2.5 font-mono text-xs text-fg-mute">
+        <a href={isEssay ? '/essays/' : '/blog/'} class="hover:text-accent transition-colors">
+          {isEssay ? '随笔' : '文章'}
+        </a>
+        <span class="opacity-40">/</span>
+        <span>{post.data.category}</span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 font-mono text-xs text-fg-mute">
+        <FormattedDate date={post.data.pubDate} />
+        {
+          post.data.updated && (
+            <span>
+              更新于 <FormattedDate date={post.data.updated} />
+            </span>
+          )
+        }
+        <span>~{readMinutes} min</span>
+        <span>{plain.length} 字</span>
+      </div>
+
+      {post.data.epigraph && <p class="epigraph mt-6 font-kai">{post.data.epigraph}</p>}
+    </header>
+
+    <div class="grid gap-10 mt-10 lg:grid-cols-[1fr_230px]">
+      <!-- 正文 -->
+      <div class="prose-cn max-w-3xl" data-reveal>
+        <Content />
+
+        <div class="flex flex-wrap gap-2 mt-12 pt-6 border-t border-line">
+          {post.data.tags.map((t) => (
+            <a href={`/tags/${t}/`} class="tag-pill text-xs px-2.5 py-1 rounded-full font-mono">#{t}</a>
+          ))}
+        </div>
+      </div>
+
+      <!-- 目录（桌面端吸附） -->
+      <aside class="hidden lg:block">
+        <div class="sticky top-24">
+          <Toc headings={headings} />
+        </div>
+      </aside>
+    </div>
+
+    <!-- 上一篇 / 下一篇 -->
+    <nav class="grid gap-4 sm:grid-cols-2 mt-16" aria-label="相邻文章">
+      {
+        older ? (
+          <a href={`/blog/${older.id}/`} class="post-card rounded-xl p-5 group" data-reveal>
+            <p class="font-mono text-xs text-fg-mute">← 上一篇</p>
+            <p class="font-kai font-semibold mt-2 group-hover:text-accent transition-colors leading-snug">{older.data.title}</p>
+          </a>
+        ) : (
+          <div class="soft-card rounded-xl p-5 opacity-50">
+            <p class="font-mono text-xs text-fg-mute">← 上一篇</p>
+            <p class="text-fg-mute mt-2 text-sm">没有更早的文章了</p>
+          </div>
+        )
+      }
+      {
+        newer ? (
+          <a href={`/blog/${newer.id}/`} class="post-card rounded-xl p-5 group text-right" data-reveal style="--reveal-delay:90ms">
+            <p class="font-mono text-xs text-fg-mute">下一篇 →</p>
+            <p class="font-kai font-semibold mt-2 group-hover:text-accent transition-colors leading-snug">{newer.data.title}</p>
+          </a>
+        ) : (
+          <div class="soft-card rounded-xl p-5 opacity-50 text-right">
+            <p class="font-mono text-xs text-fg-mute">下一篇 →</p>
+            <p class="text-fg-mute mt-2 text-sm">最新的就是这一篇</p>
+          </div>
+        )
+      }
+    </nav>
+
+    <Comments />
+  </article>
+</Base>

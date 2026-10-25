@@ -1,0 +1,141 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+
+const timeline = [
+  {
+    date: '2024-09',
+    title: '考入西北工业大学',
+    desc: '计算机科学与技术专业。第一次接触 Linux 与 C 语言课程。',
+    kind: 'commit',
+  },
+  {
+    date: '2025',
+    title: 'BOOM · 扫雷',
+    desc: '第一个完整的 C++ 小项目：设计、编码、调试、重构走了一遍全流程。',
+    kind: 'commit',
+    link: 'https://github.com/Rei-soul/BOOM',
+  },
+  {
+    date: '2025',
+    title: 'Stroop-Effect · 心理实验程序',
+    desc: '课程作业。第一次认真思考"人如何使用软件"——工程之外的那部分。',
+    kind: 'commit',
+    link: 'https://github.com/Rei-soul/Stroop-Effect',
+  },
+  {
+    date: '2026 春',
+    title: '计算机系统基础（FCS）',
+    desc: '汇编、链接、存储器层次、虚拟内存。学完之后看 C 的眼光不一样了。',
+    kind: 'commit',
+    link: 'https://github.com/Rei-soul/NWPU_FCS_LEARNING',
+  },
+  {
+    date: '2026 夏',
+    title: '深度学习与 PyTorch',
+    desc: '从手写反向传播到复现论文（NTAM），开始记录自己的学习路径。',
+    kind: 'commit',
+    link: 'https://github.com/Rei-soul/DL_learning',
+  },
+  {
+    date: '2026-10',
+    title: '这个网站上线',
+    desc: '用 Astro 亲手搭建：从设计令牌到部署流水线，全部自己来。',
+    kind: 'warm',
+  },
+];
+
+const skills = [
+  { name: 'C / C++', level: '日常主力', note: '课程与项目的主语言' },
+  { name: 'Python', level: '熟练', note: 'PyTorch / 数据处理 / 脚本' },
+  { name: 'Java', level: '了解', note: '课程练习' },
+  { name: '计算机系统', level: '系统学习', note: 'FCS / 汇编 / 体系结构' },
+  { name: '深度学习', level: '进阶中', note: '复现过完整论文' },
+  { name: 'Web', level: '在建', note: '这个网站就是练习场' },
+];
+---
+
+<Base title="关于" description="关于 Rei-soul：一个相信代码有温度的 CS 本科生。">
+  <PageBanner wallpaper="/wallpapers/about.svg" title="关于" command="finger rei-soul" />
+  <div class="glass-rise mx-auto max-w-3xl px-4 pb-8 pt-12 md:pt-16">
+    <!-- 自我介绍 -->
+    <header class="flex flex-col sm:flex-row items-start gap-7" data-reveal>
+      <img
+        src="https://avatars.githubusercontent.com/u/196120965?v=4"
+        alt="Rei-soul 的头像"
+        width="96"
+        height="96"
+        loading="lazy"
+        class="w-24 h-24 rounded-2xl border border-line shadow-lg"
+      />
+      <div>
+        <p class="font-mono text-xs text-accent">$ finger rei-soul</p>
+        <h1 class="font-kai text-3xl font-semibold mt-2">Rei-soul</h1>
+        <p class="text-fg-mute mt-3 font-kai leading-loose">
+          西北工业大学计算机科学与技术本科生，大三。<br />
+          相信代码可以有温度，工程师可以有笔墨。<br />
+          大部分时间在写 C++ 和 Python，偶尔写点中文。
+        </p>
+        <div class="flex flex-wrap gap-3 mt-4 font-mono text-sm">
+          <a href="https://github.com/Rei-soul" target="_blank" rel="noopener" class="text-accent hover:underline underline-offset-4">GitHub ↗</a>
+          <a href="/rss.xml" class="text-fg-mute hover:text-accent transition-colors">RSS</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 成长时间线（git graph 风格） -->
+    <section class="mt-16" data-reveal>
+      <div class="flex items-center gap-3 mb-8">
+        <h2 class="font-kai text-xl font-semibold">git log --graph 本人</h2>
+        <div class="flex-1 border-t border-dashed border-line" />
+      </div>
+      <ul class="git-graph space-y-7">
+        {
+          timeline.map((item) => (
+            <li class={`git-node ${item.kind === 'warm' ? 'warm' : ''}`}>
+              <div class="flex flex-wrap items-baseline gap-x-3">
+                <span class="font-mono text-xs text-fg-mute">{item.date}</span>
+                <h3 class="font-kai font-semibold text-[1.05rem]">
+                  {item.link ? (
+                    <a href={item.link} target="_blank" rel="noopener" class="hover:text-accent transition-colors">
+                      {item.title} ↗
+                    </a>
+                  ) : (
+                    item.title
+                  )}
+                </h3>
+              </div>
+              <p class="text-sm text-fg-mute mt-1.5 leading-relaxed">{item.desc}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- 技能 -->
+    <section class="mt-16" data-reveal>
+      <div class="flex items-center gap-3 mb-8">
+        <h2 class="font-kai text-xl font-semibold">技能栈</h2>
+        <div class="flex-1 border-t border-dashed border-line" />
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {
+          skills.map((s) => (
+            <div class="soft-card rounded-xl px-5 py-4 flex items-baseline justify-between gap-3">
+              <div>
+                <p class="font-mono font-semibold">{s.name}</p>
+                <p class="text-xs text-fg-mute mt-1">{s.note}</p>
+              </div>
+              <span class="text-xs font-mono text-accent shrink-0">{s.level}</span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 写在最后 -->
+    <p class="epigraph mt-16 font-kai" data-reveal>
+      行到水穷处，坐看云起时。慢慢来，比较快。
+    </p>
+  </div>
+</Base>

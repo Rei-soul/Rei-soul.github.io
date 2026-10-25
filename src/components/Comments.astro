@@ -1,0 +1,42 @@
+---
+// giscus 评论（基于 GitHub Discussions）。默认关闭。
+// 开启步骤：
+//   1. 仓库 Settings → General → Features 勾选 Discussions
+//   2. 安装 giscus app：https://github.com/apps/giscus（只授权本仓库）
+//   3. 打开 https://giscus.app 生成配置，把 repoId / categoryId 填到下方
+//   4. 把 ENABLED 改为 true
+const ENABLED = false;
+const GISCUS = {
+  repo: 'Rei-soul/Rei-soul.github.io',
+  repoId: '', // 在 giscus.app 获取
+  category: 'Announcements',
+  categoryId: '', // 在 giscus.app 获取
+};
+---
+
+{
+  ENABLED && (
+    <section class="mt-14 pt-10 border-t border-line" aria-label="评论">
+      <h2 class="font-kai text-xl mb-6">留言</h2>
+      <div class="giscus" />
+      <script
+        is:inline
+        src="https://giscus.app/client.js"
+        data-repo={GISCUS.repo}
+        data-repo-id={GISCUS.repoId}
+        data-category={GISCUS.category}
+        data-category-id={GISCUS.categoryId}
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async
+      />
+    </section>
+  )
+}

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#06131a"/>
+      <stop offset="0.6" stop-color="#081a23"/>
+      <stop offset="1" stop-color="#0a2029"/>
+    </linearGradient>
+    <radialGradient id="glowc" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#38d9f0" stop-opacity="0.9"/>
+      <stop offset="0.4" stop-color="#38d9f0" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#38d9f0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#base)"/>
+
+  <g fill="none" stroke="#155063" stroke-width="2" opacity="0.65">
+    <polyline points="-20,720 180,720 260,640 560,640 640,560 980,560"/>
+    <polyline points="-20,820 320,820 420,730 760,730 860,810 1240,810"/>
+    <polyline points="1600,760 1380,760 1300,680 1020,680 940,760 700,760"/>
+    <polyline points="240,200 480,200 560,280 900,280 980,200 1300,200 1380,280 1620,280"/>
+    <polyline points="80,120 300,120 380,40"/>
+    <polyline points="1600,120 1440,120 1360,200 1180,200"/>
+  </g>
+
+  <g fill="#38d9f0">
+    <circle cx="560" cy="640" r="5" opacity="0.95"/>
+    <circle cx="980" cy="560" r="4" opacity="0.7"/>
+    <circle cx="760" cy="730" r="4.5" opacity="0.8"/>
+    <circle cx="1240" cy="810" r="4" opacity="0.6"/>
+    <circle cx="900" cy="280" r="5" opacity="0.9"/>
+    <circle cx="1300" cy="200" r="4" opacity="0.7"/>
+    <circle cx="380" cy="40" r="3.5" opacity="0.5"/>
+    <circle cx="1360" cy="200" r="4" opacity="0.65"/>
+  </g>
+  <circle cx="980" cy="560" r="46" fill="url(#glowc)" opacity="0.5"/>
+  <circle cx="900" cy="280" r="52" fill="url(#glowc)" opacity="0.4"/>
+  <circle cx="1240" cy="810" r="14" fill="none" stroke="#f0a84c" stroke-width="1.5" opacity="0.8"/>
+  <circle cx="1240" cy="810" r="4" fill="#f0a84c" opacity="0.9"/>
+
+  <g fill="#2dd4bf" opacity="0.5">
+    <rect x="1120" y="430" width="180" height="10" rx="5" opacity="0.55"/>
+    <rect x="1120" y="456" width="132" height="10" rx="5" opacity="0.4"/>
+    <rect x="1120" y="482" width="158" height="10" rx="5" opacity="0.3"/>
+    <rect x="1148" y="508" width="104" height="10" rx="5" opacity="0.2"/>
+  </g>
+  <g stroke="#123a47" stroke-width="1" opacity="0.35">
+    <path d="M0 560 H1600 M0 400 H1600 M0 240 H1600"/>
+  </g>
+</svg>

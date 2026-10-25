@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Page } from 'astro';
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>;
+}
+
+const { page } = Astro.props;
+// paginate() 把第 1 页放在 /blog/page/1/，我们统一指回 /blog/
+const clean = (url?: string) => (url ? url.replace('/blog/page/1/', '/blog/') : undefined);
+const prev = clean(page.url.prev) ?? (page.currentPage === 2 ? '/blog/' : undefined);
+const next = clean(page.url.next);
+const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+const href = (n: number) => (n === 1 ? '/blog/' : `/blog/page/${n}/`);
+---
+
+{
+  page.lastPage > 1 && (
+    <nav class="mt-12 flex items-center justify-center gap-1.5 font-mono text-sm" aria-label="分页">
+      {prev ? (
+        <a href={prev} class="px-3 py-1.5 rounded-lg border border-line text-fg-mute hover:text-accent hover:border-accent transition-colors">
+          ←
+        </a>
+      ) : (
+        <span class="px-3 py-1.5 rounded-lg border border-line opacity-30 select-none">←</span>
+      )}
+
+      {pages.map((n) =>
+        n === page.currentPage ? (
+          <span class="px-3 py-1.5 rounded-lg border border-accent text-accent bg-accent-soft select-none">{n}</span>
+        ) : (
+          <a href={href(n)} class="px-3 py-1.5 rounded-lg border border-line text-fg-mute hover:text-accent hover:border-accent transition-colors">
+            {n}
+          </a>
+        )
+      )}
+
+      {next ? (
+        <a href={next} class="px-3 py-1.5 rounded-lg border border-line text-fg-mute hover:text-accent hover:border-accent transition-colors">
+          →
+        </a>
+      ) : (
+        <span class="px-3 py-1.5 rounded-lg border border-line opacity-30 select-none">→</span>
+      )}
+    </nav>
+  )
+}

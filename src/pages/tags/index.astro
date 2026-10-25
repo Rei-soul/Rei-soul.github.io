@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import PageBanner from '../../components/PageBanner.astro';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const tagCount = new Map<string, number>();
+for (const p of posts) {
+  for (const t of p.data.tags) {
+    tagCount.set(t, (tagCount.get(t) ?? 0) + 1);
+  }
+}
+const tags = [...tagCount.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<Base title="标签" description="按标签浏览全部文章。">
+  <PageBanner wallpaper="/wallpapers/tags.svg" title="标签" command="git tag --list" subtitle={`共 ${tags.length} 个标签`} />
+  <div class="glass-rise mx-auto max-w-3xl px-4 pb-8 pt-10 md:pt-12">
+    <div class="flex flex-wrap gap-3" data-reveal>
+      {
+        tags.map(([tag, count]) => (
+          <a href={`/tags/${tag}/`} class="tag-pill px-3.5 py-1.5 rounded-full text-sm font-mono flex items-center gap-2">
+            #{tag}
+            <span class="text-xs opacity-60">{count}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Base>

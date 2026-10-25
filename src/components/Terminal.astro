@@ -1,0 +1,126 @@
+---
+// 首屏终端窗口：打字机效果逐条"执行"命令（无 JS/减少动态时优雅降级）
+interface Line {
+  t: 'cmd' | 'out' | 'warm' | 'accent';
+  s: string;
+}
+interface Props {
+  lines: Line[];
+}
+const { lines } = Astro.props;
+---
+
+<div class="term-window rounded-xl overflow-hidden hero-in" style="--reveal-delay: 380ms" data-terminal>
+  <div class="flex items-center gap-2 px-4 py-3 border-b border-line">
+    <span class="term-dot" style="background:#ff5f57"></span>
+    <span class="term-dot" style="background:#febc2e"></span>
+    <span class="term-dot" style="background:#28c840"></span>
+    <span class="ml-2 font-mono text-xs text-fg-mute select-none">rei@soul: ~ (zsh)</span>
+  </div>
+  <div class="term-body px-5 py-4" data-lines={JSON.stringify(lines)}>
+    <noscript>
+      <p><span class="text-accent">rei@soul:~$</span> whoami</p>
+      <p class="text-fg-mute">Rei-soul · CS 本科生 · C++ / Python / PyTorch</p>
+    </noscript>
+  </div>
+</div>
+
+<script>
+  const PROMPT = 'rei@soul:~$ ';
+  const CLS: Record<string, string> = {
+    cmd: 'text-fg',
+    out: 'text-fg-mute',
+    warm: 'text-warm',
+    accent: 'text-accent',
+  };
+
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  function typeInto(span: HTMLElement, text: string): Promise<void> {
+    return new Promise((resolve) => {
+      let i = 0;
+      const tick = () => {
+        if (i >= text.length) return resolve();
+        span.textContent += text[i++];
+        setTimeout(tick, 42 + Math.random() * 46);
+      };
+      tick();
+    });
+  }
+
+  function renderAll(body: HTMLElement, lines: { t: string; s: string }[]) {
+    body.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'term-cursor';
+    for (const line of lines) {
+      const p = document.createElement('p');
+      if (line.t === 'cmd') {
+        const prompt = document.createElement('span');
+        prompt.className = 'text-accent';
+        prompt.textContent = PROMPT;
+        p.appendChild(prompt);
+        const text = document.createElement('span');
+        text.textContent = line.s;
+        p.appendChild(text);
+      } else {
+        p.className = CLS[line.t] ?? CLS.out;
+        p.textContent = line.s;
+      }
+      body.appendChild(p);
+    }
+    body.lastElementChild?.appendChild(cursor);
+  }
+
+  async function play(body: HTMLElement, lines: { t: string; s: string }[]) {
+    body.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'term-cursor';
+    for (const line of lines) {
+      const p = document.createElement('p');
+      if (line.t === 'cmd') {
+        const prompt = document.createElement('span');
+        prompt.className = 'text-accent';
+        prompt.textContent = PROMPT;
+        const text = document.createElement('span');
+        p.append(prompt, text, cursor);
+        body.appendChild(p);
+        await sleep(260);
+        await typeInto(text, line.s);
+        await sleep(160);
+        cursor.remove();
+      } else {
+        p.className = CLS[line.t] ?? CLS.out;
+        p.textContent = line.s;
+        p.style.opacity = '0';
+        p.style.transition = 'opacity .3s ease';
+        body.appendChild(p);
+        await sleep(60);
+        p.style.opacity = '1';
+        await sleep(340);
+      }
+    }
+    body.lastElementChild?.appendChild(cursor);
+  }
+
+  function initTerminals() {
+    document.querySelectorAll<HTMLElement>('[data-terminal]:not([data-done])').forEach((el) => {
+      el.setAttribute('data-done', '');
+      const body = el.querySelector<HTMLElement>('.term-body');
+      if (!body) return;
+      let lines: { t: string; s: string }[] = [];
+      try {
+        lines = JSON.parse(body.dataset.lines ?? '[]');
+      } catch {
+        return;
+      }
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) {
+        renderAll(body, lines);
+      } else {
+        play(body, lines);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initTerminals);
+</script>

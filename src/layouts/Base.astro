@@ -1,0 +1,89 @@
+---
+import '../styles/global.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/700.css';
+import 'lxgw-wenkai-screen-webfont/style.css';
+import 'katex/dist/katex.min.css';
+import { ClientRouter } from 'astro:transitions';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SearchDialog from '../components/SearchDialog.astro';
+import { SITE } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title} · ${SITE.tagline}`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.author} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href={new URL('rss.xml', Astro.site)} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={SITE.title} />
+
+    <script is:inline data-astro-rerun>
+      // 尽早执行：标记 js 可用（供滚动入场动画用）并恢复主题，避免深浅色闪烁。
+      // data-astro-rerun：View Transitions 导航换入新 <html> 后 class 会被重置，
+      // 此属性让本脚本在每次导航后重新执行，保证主题跨页面保持。
+      (function () {
+        document.documentElement.classList.add('js');
+        var theme = 'dark';
+        try {
+          theme = localStorage.getItem('theme') || 'dark';
+        } catch (e) {}
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+      })();
+    </script>
+
+    <ClientRouter />
+  </head>
+
+  <body class="min-h-screen flex flex-col antialiased">
+    <!-- 站内链接点击时的顶部进度条 -->
+    <div id="page-progress" aria-hidden="true"><div class="bar"></div></div>
+
+    <SiteHeader />
+
+    <main class="site-main flex-1 w-full">
+      <slot />
+    </main>
+
+    <SiteFooter />
+
+    <!-- 回到顶部 -->
+    <button
+      id="back-to-top"
+      aria-label="回到顶部"
+      class="fixed bottom-6 right-6 z-40 soft-card rounded-full w-11 h-11 flex items-center justify-center text-fg-mute"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 19V5" /><path d="m5 12 7-7 7 7" />
+      </svg>
+    </button>
+
+    <SearchDialog />
+
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

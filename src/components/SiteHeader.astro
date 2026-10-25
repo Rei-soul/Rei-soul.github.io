@@ -1,0 +1,64 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const nav = [
+  { href: '/', label: '首页' },
+  { href: '/blog/', label: '文章' },
+  { href: '/essays/', label: '随笔' },
+  { href: '/archive/', label: '归档' },
+  { href: '/projects/', label: '项目' },
+  { href: '/about/', label: '关于' },
+];
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' || path === '' : path.startsWith(href);
+---
+
+<header id="site-header">
+  <div class="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-1.5 font-mono font-bold text-lg group" aria-label="回到首页">
+      <span class="text-accent">&gt;_</span>
+      <!-- text-fg 必须显式声明：否则 color 继承自 body 的具体值，
+           透明态（悬浮壁纸）下不会随 header 的 --fg 覆盖变白 -->
+      <span class="text-fg group-hover:text-accent transition-colors">rei<span class="text-fg-mute font-normal">.</span>soul</span>
+    </a>
+
+    <!-- 桌面导航（1024px 以上；768~1024 区间用汉堡，避免菜单挤压横幅） -->
+    <nav class="hidden lg:flex items-center gap-6 text-sm" aria-label="主导航">
+      {nav.map((item) => (
+        <a href={item.href} class={`nav-link ${isActive(item.href) ? 'active' : ''}`} aria-current={isActive(item.href) ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+      <button class="search-open p-2 rounded-lg text-fg-mute hover:text-accent transition-colors" aria-label="搜索（Ctrl K）" title="搜索（Ctrl K）">
+        <svg class="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+        </svg>
+      </button>
+      <ThemeToggle />
+    </nav>
+
+    <!-- 移动端：搜索 + 主题 + 汉堡（三线变 X） -->
+    <div class="flex lg:hidden items-center gap-1">
+      <button class="search-open p-2 rounded-lg text-fg-mute hover:text-accent transition-colors" aria-label="搜索">
+        <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+        </svg>
+      </button>
+      <ThemeToggle />
+      <button class="nav-burger p-2.5 rounded-lg text-fg-mute hover:text-accent transition-colors" aria-label="打开菜单" aria-expanded="false">
+        <span class="burger block" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 移动端折叠菜单（从导航栏底部展开） -->
+  <nav class="mobile-menu" aria-label="移动端导航">
+    {nav.map((item) => (
+      <a href={item.href} class={`block px-4 py-2.5 rounded-lg transition-colors hover:bg-accent-soft ${isActive(item.href) ? 'text-accent' : 'text-fg'}`}>
+        {item.label}
+      </a>
+    ))}
+  </nav>
+</header>

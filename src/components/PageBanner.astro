@@ -1,0 +1,44 @@
+---
+// 页面顶部壁纸横幅：壁纸层（视差）+ 渐变罩 + 标题 + 自定义内容（slot）。
+// size="full" 用于首页 100vh；内页默认 half（~48vh）。
+interface Props {
+  wallpaper: string;
+  title?: string;
+  command?: string;
+  subtitle?: string;
+  size?: 'full' | 'half';
+  tone?: 'cyan' | 'warm';
+}
+
+const { wallpaper, title, command, subtitle, size = 'half', tone = 'cyan' } = Astro.props;
+const hasHeader = Boolean(title || command || subtitle);
+---
+
+<section class={`page-banner ${size === 'full' ? 'page-banner--full' : ''}`}>
+  <div class="banner-media" data-parallax data-speed={size === 'full' ? '0.4' : '0.25'}>
+    <img class="banner-img" src={wallpaper} alt="" aria-hidden="true" />
+  </div>
+  <div class="banner-overlay" aria-hidden="true"></div>
+
+  {
+    hasHeader && (
+      <div
+        class="banner-content mx-auto w-full max-w-5xl px-4"
+        data-parallax=""
+        data-speed="0.12"
+        data-parallax-fade=""
+      >
+        {command && (
+          <p class={`banner-cmd font-mono text-xs md:text-sm ${tone === 'warm' ? 'warm' : ''}`}>$ {command}</p>
+        )}
+        {title && <h1 class="banner-title font-kai text-3xl md:text-4xl xl:text-5xl font-semibold mt-3 leading-tight">{title}</h1>}
+        {subtitle && <p class="banner-sub mt-4 text-sm md:text-base leading-relaxed max-w-xl">{subtitle}</p>}
+      </div>
+    )
+  }
+
+  <!-- slot 层：不设 relative，其内绝对定位元素相对整个横幅定位 -->
+  <div class="z-10 mx-auto w-full max-w-5xl px-4">
+    <slot />
+  </div>
+</section>

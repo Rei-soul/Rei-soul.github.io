@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import PageBanner from '../components/PageBanner.astro';
+
+// 随笔栏目：技术文章之外的部分（暖色调，"人文关怀"的载体）
+const essays = (await getCollection('blog', ({ data }) => !data.draft && data.kind === 'essay')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Base title="随笔" description="技术之外的字：随笔、书摘与一些没用的浪漫。">
+  <PageBanner
+    wallpaper="/wallpapers/essays.svg"
+    title="随笔"
+    command="cat ~/essays/*.md"
+    tone="warm"
+    subtitle={`这里不追求"有用"。技术文章允许不严谨，随笔允许没意义——前者留待评论指正，后者只负责诚实。`}
+  />
+  <div class="glass-rise mx-auto max-w-3xl px-4 pb-8 pt-12 md:pt-14">
+    {
+      essays.length ? (
+        <ul class="git-graph mt-12 space-y-5">
+          {essays.map((essay, i) => (
+            <li class="git-node warm" data-reveal style={`--reveal-delay:${i * 90}ms`}>
+              <a href={`/blog/${essay.id}/`} class="group block">
+                <div class="flex items-baseline justify-between gap-4">
+                  <h2 class="font-kai text-xl font-semibold group-hover:text-warm transition-colors leading-snug">
+                    {essay.data.title}
+                  </h2>
+                  <FormattedDate date={essay.data.pubDate} class="font-mono text-xs text-fg-mute shrink-0" />
+                </div>
+                {essay.data.description && <p class="text-sm text-fg-mute mt-2 leading-relaxed">{essay.data.description}</p>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-fg-mute mt-12 font-kai">这里还空着——第一篇随笔正在路上。</p>
+      )
+    }
+  </div>
+</Base>

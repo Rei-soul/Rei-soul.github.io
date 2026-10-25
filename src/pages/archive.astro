@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import PageBanner from '../components/PageBanner.astro';
+
+// 全部文章按年分组，做成 git log --graph 的提交图风格
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const byYear = new Map<number, typeof posts>();
+for (const p of posts) {
+  const y = p.data.pubDate.getFullYear();
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(p);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+// 由 slug 生成 7 位伪 commit hash
+function fakeHash(slug: string): string {
+  let h = 0x811c9dc5;
+  for (const ch of slug) {
+    h ^= ch.charCodeAt(0);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(16).padStart(8, '0').slice(0, 7);
+}
+
+const total = posts.length;
+---
+
+<Base title="归档" description="全部文章的时间线归档。">
+  <PageBanner
+    wallpaper="/wallpapers/archive.svg"
+    title="归档"
+    command="git log --oneline --graph --all"
+    subtitle={`共 ${total} 次提交（${total} 篇文章），每一篇都是一次有意义的 commit。`}
+  />
+  <div class="glass-rise mx-auto max-w-3xl px-4 pb-8 pt-12 md:pt-14">
+    <div class="space-y-14">
+      {
+        years.map((year, yi) => (
+          <section data-reveal style={`--reveal-delay:${yi * 80}ms`}>
+            <div class="flex items-center gap-3 mb-6">
+              <span class="font-mono text-sm px-2.5 py-1 rounded-md border border-line text-fg-mute">* {year}</span>
+              <span class="font-mono text-xs text-fg-mute opacity-60">{byYear.get(year)!.length} commits</span>
+              <div class="flex-1 border-t border-dashed border-line" />
+            </div>
+
+            <ul class="git-graph space-y-4">
+              {byYear.get(year)!.map((post) => (
+                <li class={`git-node ${post.data.kind === 'essay' ? 'warm' : ''}`}>
+                  <a href={`/blog/${post.id}/`} class="group flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
+                    <span class="commit-hash group-hover:shadow-[0_0_12px_var(--glow)] transition-shadow">{fakeHash(post.id)}</span>
+                    <span class="font-kai text-[1.05rem] font-semibold group-hover:text-accent transition-colors">{post.data.title}</span>
+                    <span class="ml-auto font-mono text-xs text-fg-mute flex items-center gap-1">
+                      {post.data.kind === 'essay' && <span class="text-warm">随笔</span>}
+                      <FormattedDate date={post.data.pubDate} />
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Base>
