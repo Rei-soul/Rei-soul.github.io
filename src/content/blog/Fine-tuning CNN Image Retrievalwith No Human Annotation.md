@@ -1,3 +1,17 @@
+---
+title: 初入图像检索
+description: 一句话摘要（列表页和 SEO 用）
+pubDate: 2026-10-27
+tags: [CNN,论文复现,深度学习]
+category: 分类
+kind: tech            # tech=技术文章 / essay=随笔（进随笔栏目，暖色调）
+epigraph: 题记，显示在标题下方（可选，人文点缀）
+draft: false          # true 则不发布
+---
+
+
+
+
 # 初入图像检索
 ## 图像检索的任务
 - 查询图：你拍了一栋建筑，想找图库里所有拍到同一栋建筑的图。
