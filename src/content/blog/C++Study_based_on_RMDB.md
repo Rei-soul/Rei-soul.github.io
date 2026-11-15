@@ -5,7 +5,10 @@ pubDate: 2026-11-15
 category: 技术笔记
 tags: [C++, RMDB, 数据库, 模板, OOP]
 kind: tech
+epigraph: 轮子要造一遍，才知道轮子为什么是圆的。
 ---
+
+111
 
 <!-- more -->
 
