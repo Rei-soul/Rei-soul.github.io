@@ -1,3 +1,15 @@
+---
+title: "基于RMDB源码的C++学习笔记"
+description: "RMDB数据库源码里用到的C++模板、友元、运算符重载、虚函数、流、unique_ptr与文件描述符梳理"
+pubDate: 2026-11-15
+category: 技术笔记
+tags: [C++, RMDB, 数据库, 模板, OOP]
+kind: tech
+---
+
+<!-- more -->
+
+
 ## 模板
 ### 基础模板 · 模板函数
 ```cpp
